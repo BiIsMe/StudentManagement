@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poly.bean.User;
 import com.poly.dao.UserDao;
+import com.poly.entity.Student;
+import com.poly.entity.User;
 import com.poly.service.CookieService;
 import com.poly.service.ParamService;
 import com.poly.service.SessionService;
@@ -62,8 +63,8 @@ public class LoginController {
 				int day = remember?1:0;
 				cookie.creatCookie("username", username, day);
 				cookie.creatCookie("password", pass, day);
-				model.addAttribute("message", "login successful");
 				session.set("username"	, username); 
+				model.addAttribute("student", new Student());
 				return "student";
 			}
 		}	

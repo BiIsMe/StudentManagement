@@ -1,4 +1,4 @@
-package com.poly.bean;
+package com.poly.entity;
 import java.io.Serializable;
 
 import javax.persistence.*;
