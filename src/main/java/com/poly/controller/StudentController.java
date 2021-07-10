@@ -4,89 +4,76 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poly.bean.Major;
-import com.poly.bean.Student;
 import com.poly.dao.MajorDao;
 import com.poly.dao.StudentDao;
+import com.poly.entity.Major;
+import com.poly.entity.Student;
 
 @Controller
 public class StudentController {
 	
 	@Autowired
-	StudentDao dao;
-	@Autowired
 	MajorDao mdao;
+	@Autowired
+	StudentDao dao;
 
 	@RequestMapping("student")
-	public String student(Model model) {		
+	public String student(Model model) {
+		List<Student> stlist = dao.findAll();
+		model.addAttribute("listST",stlist);
 		model.addAttribute("student",new Student());
 		return "student";
 	}
 	
-	@RequestMapping("student/detail/{id}")
-	public String detail(Model model,@PathVariable("idSt") String id) {
-		List<Student> list = dao.findAll();
+	@RequestMapping(value="student/edit/{id}")
+	public String edit(Model model, @PathVariable("id") String id) {
 		Student st = dao.findById(id).get();
+		List<Student> stlist = dao.findAll();
+		model.addAttribute("listST",stlist);
 		model.addAttribute("student",st);
-		model.addAttribute("list",list);
 		return "student";
 	}
 	
-	@RequestMapping("student/delete/{id}")
-	public String delete(Model model,@PathVariable("idSt") String id) {
-		List<Student> list = dao.findAll();
+	@RequestMapping(value="student/delete/{id}")
+	public String delete(Model model,@PathVariable("id") String id) {
 		dao.deleteById(id);
+		
 		return "redirect:/student";
 	}
 	
 	@RequestMapping(value="student", params = "btnInsert")
-	public String addSt(Model model,@Validated @ModelAttribute("student") Student st, BindingResult errors) {
-		if(!errors.hasErrors()) {
+	public String insert(Model model, @Validated @ModelAttribute("student") Student st, BindingResult result) {
+		if(!result.hasErrors())
 			dao.save(st);
-		}
-		List<Student> list = dao.findAll();
-		model.addAttribute("list",list);
+		List<Student> stlist = dao.findAll();
+		model.addAttribute("listST",stlist);
 		return "student";
 	}
 	
-	@RequestMapping(value="student", params = "btnUpdate")
-	public String updateSt(Model model,@Validated @ModelAttribute("student") Student st, BindingResult errors) {
-		if(!errors.hasErrors()) {
-			dao.save(st);
-		}
-		List<Student> list = dao.findAll();
-		model.addAttribute("list",list);
-		return "student";
-	}
-	
-	@RequestMapping(value="student", params = "btnReset")
-	public String resetSt(Model model) {
+	@RequestMapping(value="student",params = "btnReset")
+	public String reset() {
 		return "redirect:/student";
 	}
 	
-	@ModelAttribute("genders")
-	public Map<Boolean, String> getGenders(){
-		Map<Boolean, String> map = new HashMap<Boolean, String>();
-		map.put(true, "male");
-		map.put(false, "female");
-		return map;
-	}
 	
 	@ModelAttribute("majors")
 	public Map<String, String> getMajors(){
-		Map<String, String>map = new HashMap<String, String>();
 		List<Major> list = mdao.findAll();
+		Map<String, String>map = new HashMap<String, String>();
 		for(Major m : list) {
-			map.put(m.getIdMajor(), m.getName());
+			map.put(m.getId(), m.getName());
 		}
 		return map;
 	}
