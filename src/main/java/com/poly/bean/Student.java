@@ -5,13 +5,20 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name="student")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student implements Serializable {
-
+	private static final long serialVersionUID = 1L;
+	
 	@Id
-	@Column(name="idSt")
-	private String id;
+	private String idSt;
 	
 	private String name;
 	
@@ -21,9 +28,5 @@ public class Student implements Serializable {
 	
 	private Double mark = 0.0;
 	
-	private Date dob;
-	
-	@ManyToOne
-	@JoinColumn(name="major")
-	private Major major;
+	private String major;
 }

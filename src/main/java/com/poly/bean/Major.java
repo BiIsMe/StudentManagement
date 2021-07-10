@@ -16,13 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Major implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="idMajor")
-	private String id;
+	private String idMajor;
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "major")
-	private List<Student> students;
 }

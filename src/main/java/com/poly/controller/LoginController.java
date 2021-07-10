@@ -64,7 +64,7 @@ public class LoginController {
 				cookie.creatCookie("password", pass, day);
 				model.addAttribute("message", "login successful");
 				session.set("username"	, username); 
-				return "login";
+				return "student";
 			}
 		}	
 	}
